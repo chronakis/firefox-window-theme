@@ -27,39 +27,52 @@ const ALL_THEMES = [
     new BasicColorTheme('#c594c5'),
 ];
 
-function getNextTheme() {
-    const sortedThemes = [...ALL_THEMES];
-    sortedThemes.sort((a, b) => {
-        if (a.usage == b.usage) {
-            return a.lastUsed > b.lastUsed;
-        }
-        return a.usage > b.usage;
-    });
-    return sortedThemes[0];
+const DEFAULT_THEME = { colors: {} };
+
+function applyThemeToWindow(windowId, theme) {
+    browser.theme.update(windowId, theme.browserThemeObject);
+    theme.usage += 1;
+    theme.lastUsed = Date.now();
+    themeOfWindowID.set(windowId, theme);
 }
 
-function applyThemeToWindow(window) {
-    const newTheme = getNextTheme();
-    browser.theme.update(window.id, newTheme.browserThemeObject);
-
-    newTheme.usage += 1;
-    newTheme.lastUsed = Date.now();
-    themeOfWindowID.set(window.id, newTheme);
+function resetThemeToDefault(windowId) {
+    browser.theme.reset(windowId);
+    themeOfWindowID.delete(windowId);
 }
 
 async function applyThemeToAllWindows() {
     for (const window of await browser.windows.getAll()) {
-        applyThemeToWindow(window);
+        if (themeOfWindowID.has(window.id)) {
+            applyThemeToWindow(window.id, themeOfWindowID.get(window.id));
+        }
     }
 }
 
 function freeThemeOfDestroyedWindow(window_id) {
     const theme = themeOfWindowID.get(window_id);
-    theme.usage -= 1;
-    themeOfWindowID.delete(window_id);
+    if (theme) {
+        theme.usage -= 1;
+        themeOfWindowID.delete(window_id);
+    }
 }
 
-browser.windows.onCreated.addListener(applyThemeToWindow);
 browser.windows.onRemoved.addListener(freeThemeOfDestroyedWindow);
 browser.runtime.onStartup.addListener(applyThemeToAllWindows);
 browser.runtime.onInstalled.addListener(applyThemeToAllWindows);
+
+// Popup interaction
+browser.runtime.onMessage.addListener((message, sender) => {
+    if (message.command === "applyTheme") {
+        browser.windows.getCurrent().then(window => {
+            if (message.color === "default") {
+                resetThemeToDefault(window.id);
+            } else {
+                const selectedTheme = ALL_THEMES.find(t => t.frame === message.color);
+                if (selectedTheme) {
+                    applyThemeToWindow(window.id, selectedTheme);
+                }
+            }
+        });
+    }
+});
