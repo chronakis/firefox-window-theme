@@ -17,13 +17,31 @@ class BasicColorTheme {
 }
 
 let themeOfWindowID = new Map();
+function saveThemeOfWindowID() {
+    const windowThemes = {};
+    themeOfWindowID.forEach((theme, windowId) => {
+        windowThemes[windowId] = theme.frame;
+    });
+    browser.storage.local.set({ windowThemes });
+}
+async function loadThemeOfWindowID() {
+    const { windowThemes } = await browser.storage.local.get("windowThemes") || {};
+    for (const [windowId, themeFrame] of Object.entries(windowThemes)) {
+        let theme = ALL_THEMES.find(theme => theme.frame === themeFrame);
+        if (theme) {
+            themeOfWindowID.set(parseInt(windowId), theme);
+        }
+    }
+}
+
+
 const ALL_THEMES = [
     new BasicColorTheme('#fccccf'),
     new BasicColorTheme('#f9c195'),
     new BasicColorTheme('#fcd994'),
     new BasicColorTheme('#aaefae'),
     new BasicColorTheme('#9eeded'),
-    new BasicColorTheme('#89aedd', '#000'),
+    new BasicColorTheme('#80c2fc', '#000'),
     new BasicColorTheme('#c6badd', '#000'),
 ];
 
@@ -32,8 +50,8 @@ browser.storage.local.set({ fwt_themes: ALL_THEMES });
 const DEFAULT_THEME = { colors: {} };
 
 
-
 function applyThemeToWindow(windowId, themeId) {
+    console.log('All tehmes', ALL_THEMES);
     // console.log('Applying theme', themeId);
     let theme = ALL_THEMES.find(theme => theme.frame === themeId);
     if (!theme) {
@@ -44,32 +62,33 @@ function applyThemeToWindow(windowId, themeId) {
     theme.usage += 1;
     theme.lastUsed = Date.now();
     themeOfWindowID.set(windowId, theme);
+    saveThemeOfWindowID();
 }
 
 function resetThemeToDefault(windowId) {
     browser.theme.reset(windowId);
     themeOfWindowID.delete(windowId);
+    saveThemeOfWindowID();
 }
 
 async function applyThemeToAllWindows() {
     for (const window of await browser.windows.getAll()) {
         if (themeOfWindowID.has(window.id)) {
-            applyThemeToWindow(window.id, themeOfWindowID.get(window.id));
+            applyThemeToWindow(window.id, themeOfWindowID.get(window.id).frame);
         }
     }
 }
 
 function freeThemeOfDestroyedWindow(window_id) {
+    console.log('freeThemeOfDestroyedWindow', window_id);
     const theme = themeOfWindowID.get(window_id);
     if (theme) {
         theme.usage -= 1;
         themeOfWindowID.delete(window_id);
+        saveThemeOfWindowID();
     }
 }
 
-browser.windows.onRemoved.addListener(freeThemeOfDestroyedWindow);
-browser.runtime.onStartup.addListener(applyThemeToAllWindows);
-browser.runtime.onInstalled.addListener(applyThemeToAllWindows);
 
 // Popup interaction
 browser.runtime.onMessage.addListener((message, sender) => {
@@ -86,3 +105,13 @@ browser.runtime.onMessage.addListener((message, sender) => {
         });
     }
 });
+
+browser.runtime.onStartup.addListener(async () => {
+    await loadThemeOfWindowID();
+    applyThemeToAllWindows();
+});
+browser.runtime.onInstalled.addListener(async () => {
+    await loadThemeOfWindowID();
+    applyThemeToAllWindows();
+});
+browser.windows.onRemoved.addListener(freeThemeOfDestroyedWindow);
