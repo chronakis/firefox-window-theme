@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Window colours",
-  "version": "2.0",
+  "name": "Individual window themes",
+  "version": "1.0",
   "description": "Set the colour of each window separately",
   "homepage_url": "https://github.com/chronakis/firefox-window-theme",
 
