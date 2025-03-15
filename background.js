@@ -18,18 +18,28 @@ class BasicColorTheme {
 
 let themeOfWindowID = new Map();
 const ALL_THEMES = [
-    new BasicColorTheme('#ec5f67'),
-    new BasicColorTheme('#f99157'),
-    new BasicColorTheme('#fac863'),
-    new BasicColorTheme('#99c794'),
-    new BasicColorTheme('#5fb3b3'),
-    new BasicColorTheme('#6699cc'),
-    new BasicColorTheme('#c594c5'),
+    new BasicColorTheme('#fccccf'),
+    new BasicColorTheme('#f9c195'),
+    new BasicColorTheme('#fcd994'),
+    new BasicColorTheme('#aaefae'),
+    new BasicColorTheme('#9eeded'),
+    new BasicColorTheme('#89aedd', '#000'),
+    new BasicColorTheme('#c6badd', '#000'),
 ];
+
+browser.storage.local.set({ fwt_themes: ALL_THEMES });
 
 const DEFAULT_THEME = { colors: {} };
 
-function applyThemeToWindow(windowId, theme) {
+
+
+function applyThemeToWindow(windowId, themeId) {
+    // console.log('Applying theme', themeId);
+    let theme = ALL_THEMES.find(theme => theme.frame === themeId);
+    if (!theme) {
+        console.log('Theme not found', themeId);
+        return;
+    }
     browser.theme.update(windowId, theme.browserThemeObject);
     theme.usage += 1;
     theme.lastUsed = Date.now();
@@ -65,12 +75,12 @@ browser.runtime.onInstalled.addListener(applyThemeToAllWindows);
 browser.runtime.onMessage.addListener((message, sender) => {
     if (message.command === "applyTheme") {
         browser.windows.getCurrent().then(window => {
-            if (message.color === "default") {
+            if (message.themeId === null) {
                 resetThemeToDefault(window.id);
             } else {
-                const selectedTheme = ALL_THEMES.find(t => t.frame === message.color);
-                if (selectedTheme) {
-                    applyThemeToWindow(window.id, selectedTheme);
+                const themeId = message.themeId;
+                if (themeId) {
+                    applyThemeToWindow(window.id, themeId);
                 }
             }
         });

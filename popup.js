@@ -1,33 +1,33 @@
-const themes = [
-    { color: "#ec5f67" },
-    { color: "#f99157" },
-    { color: "#fac863" },
-    { color: "#99c794" },
-    { color: "#5fb3b3" },
-    { color: "#6699cc" },
-    { color: "#c594c5" },
-];
-
 document.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("theme-buttons");
+    browser.storage.local.get("fwt_themes").then(data => {
+        let themes = data.fwt_themes;
+        if (!Array.isArray(themes)) {
+            console.log('themes is not an array, converting to array');
+            themes = Object.values(themes);
+        }
 
-    themes.forEach(theme => {
-        const button = document.createElement("button");
-        button.style.background = theme.color;
-        button.textContent = theme.color;
-        button.addEventListener("click", () => {
-            browser.runtime.sendMessage({ command: "applyTheme", color: theme.color });
+        const container = document.getElementById("theme-buttons");
+
+        themes.forEach(theme => {
+            //console.log('theme', theme);
+            const button = document.createElement("button");
+            button.style.background = theme.frame;
+            button.style.color = theme.tab_background_text;
+            button.textContent = theme.frame;
+            button.addEventListener("click", () => {
+                browser.runtime.sendMessage({ command: "applyTheme", themeId: theme.frame });
+            });
+            container.appendChild(button);
         });
-        container.appendChild(button);
-    });
 
-    // Add reset button
-    const resetButton = document.createElement("button");
-    resetButton.textContent = "Reset to Default";
-    resetButton.style.background = "#ffffff";
-    resetButton.style.color = "#000";
-    resetButton.addEventListener("click", () => {
-        browser.runtime.sendMessage({ command: "applyTheme", color: "default" });
+        // Add reset button
+        const resetButton = document.createElement("button");
+        resetButton.textContent = "Reset to Default";
+        resetButton.style.background = "#ffffff";
+        resetButton.style.color = "#000";
+        resetButton.addEventListener("click", () => {
+            browser.runtime.sendMessage({ command: "applyTheme", themeId: null });
+        });
+        container.appendChild(resetButton);
     });
-    container.appendChild(resetButton);
-});
+});    
