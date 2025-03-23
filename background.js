@@ -25,7 +25,7 @@ function saveThemeOfWindowID() {
     browser.storage.local.set({ windowThemes });
 }
 async function loadThemeOfWindowID() {
-    const { windowThemes } = await browser.storage.local.get("windowThemes") || {};
+    const { windowThemes = {} } = await browser.storage.local.get("windowThemes") || {};
     for (const [windowId, themeFrame] of Object.entries(windowThemes)) {
         let theme = ALL_THEMES.find(theme => theme.frame === themeFrame);
         if (theme) {
@@ -41,8 +41,18 @@ const ALL_THEMES = [
     new BasicColorTheme('#fcd994'),
     new BasicColorTheme('#aaefae'),
     new BasicColorTheme('#9eeded'),
-    new BasicColorTheme('#80c2fc', '#000'),
-    new BasicColorTheme('#c6badd', '#000'),
+    new BasicColorTheme('#80c2fc'),
+    new BasicColorTheme('#c6badd'),
+    new BasicColorTheme('#cccccc'),
+    new BasicColorTheme('#aaaaaa'),
+    new BasicColorTheme('#FF5733'),
+    new BasicColorTheme('#33FF57'),
+    new BasicColorTheme('#3357FF'),
+    new BasicColorTheme('#FF33A1'),
+    new BasicColorTheme('#FF8C33'),
+    new BasicColorTheme('#33FFF5'),
+    new BasicColorTheme('#8C33FF'),
+    new BasicColorTheme('#333333','#fff')
 ];
 
 browser.storage.local.set({ fwt_themes: ALL_THEMES });

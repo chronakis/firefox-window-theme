@@ -8,26 +8,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const container = document.getElementById("theme-buttons");
 
+
+        // Add reset button
+        const defaultButton = document.createElement("button");
+        defaultButton.textContent = "Default theme";
+        defaultButton.style.background = "#eeeeee";
+        defaultButton.style.color = "#000";
+        defaultButton.addEventListener("click", () => {
+            browser.runtime.sendMessage({ command: "applyTheme", themeId: null });
+        });
+        container.appendChild(defaultButton);
+
+
         themes.forEach(theme => {
-            //console.log('theme', theme);
+            const row = document.createElement("div");
+            row.classList.add("row");
+
             const button = document.createElement("button");
             button.style.background = theme.frame;
             button.style.color = theme.tab_background_text;
             button.textContent = theme.frame;
+            button.style.flexGrow = "1";
             button.addEventListener("click", () => {
                 browser.runtime.sendMessage({ command: "applyTheme", themeId: theme.frame });
             });
-            container.appendChild(button);
-        });
 
-        // Add reset button
-        const resetButton = document.createElement("button");
-        resetButton.textContent = "Reset to Default";
-        resetButton.style.background = "#ffffff";
-        resetButton.style.color = "#000";
-        resetButton.addEventListener("click", () => {
-            browser.runtime.sendMessage({ command: "applyTheme", themeId: null });
+            row.appendChild(button);
+            container.appendChild(row);
         });
-        container.appendChild(resetButton);
     });
-});    
+});
+
+browser.runtime.onMessage.addListener((message, sender) => {
+    if (message.command === "updateThemeColors") {
+        const { backgroundColor, foregroundColor } = message;
+        // Handle the updated colors (e.g., save them or update the UI)
+        console.log("Updated colors:", backgroundColor, foregroundColor);
+    }
+});
+

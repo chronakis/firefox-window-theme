@@ -25,9 +25,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.59396249"
-     inkscape:cx="353.55768"
-     inkscape:cy="501.71518"
+     inkscape:zoom="0.95440463"
+     inkscape:cx="446.35156"
+     inkscape:cy="343.66975"
      inkscape:window-width="1424"
      inkscape:window-height="865"
      inkscape:window-x="0"
@@ -37,27 +37,30 @@
   <g
      id="System / Window_Terminal">
     <rect
-       style="fill:#ffffff;stroke:#e04d62;stroke-width:1.43728;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2.3;stroke-dasharray:none;stroke-dashoffset:35.7361;stroke-opacity:1;paint-order:fill markers stroke;fill-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#e04d62;stroke-width:1.43786;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2.3;stroke-dasharray:none;stroke-dashoffset:35.7361;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect1"
-       width="21.477032"
-       height="21.332191"
-       x="1.232136"
-       y="1.5397356"
-       ry="2.3915944"
+       width="21.456146"
+       height="21.370237"
+       x="1.242578"
+       y="1.4912479"
+       ry="2.3958595"
        inkscape:export-filename="../icon.png"
        inkscape:export-xdpi="16.106024"
        inkscape:export-ydpi="16.106024" />
     <rect
-       style="fill:#e04d62;fill-opacity:1;stroke:#e04d62;stroke-width:0.982487;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2.3;stroke-dasharray:none;stroke-dashoffset:35.7361;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#e04d62;fill-opacity:1;stroke:#e04d62;stroke-width:0.982884;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2.3;stroke-dasharray:none;stroke-dashoffset:35.7361;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect2"
-       width="20.828176"
-       height="1.3596708"
-       x="1.5858259"
-       y="2.5594919"
-       ry="0.17022651" />
+       width="20.807922"
+       height="1.3620957"
+       x="1.5959241"
+       y="2.5128231"
+       ry="0.17053011" />
     <g
        id="g3"
-       transform="matrix(0.99999999,0,0,1.0746864,-0.24367733,-1.1355519)">
+       transform="matrix(0.99902759,0,0,1.076603,-0.23180014,-1.1888107)"
+       inkscape:export-filename="../icon.png"
+       inkscape:export-xdpi="16.106024"
+       inkscape:export-ydpi="16.106024">
       <path
          d="m 10.765949,10.77503 c 0,0.689476 -0.611414,1.248447 -1.3656397,1.248447 -0.7542236,0 -1.3656375,-0.558971 -1.3656375,-1.248447 0,-0.689501 0.6114139,-1.2484462 1.3656375,-1.2484462 0.7542257,0 1.3656397,0.5589452 1.3656397,1.2484462 z"
          fill="#0f1729"
